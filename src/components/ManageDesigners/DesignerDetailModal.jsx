@@ -9,11 +9,12 @@ import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseOutlined,
-  UploadOutlined
+  UploadOutlined,
+  DeleteOutlined
 } from "@ant-design/icons";
 import styled from "styled-components";
 import { uploadImageToFirebase } from "../../service/FirebaseService";
-import { uploadProductSampleImages } from "../../service/designerApi";
+import { uploadProductSampleImages, deleteProductSampleImages } from "../../service/designerApi";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -26,6 +27,7 @@ const DesignerDetailModal = ({
 }) => {
   const [uploading, setUploading] = useState(false);
   const [fileList, setFileList] = useState([]);
+  const [deletingIndexes, setDeletingIndexes] = useState(new Set());
 
   // Reset file list when modal closes
   useEffect(() => {
@@ -126,6 +128,27 @@ const DesignerDetailModal = ({
       message.error(error.message || "Failed to upload images");
     } finally {
       setUploading(false);
+    }
+  };
+
+  // Delete product sample images by index
+  const handleDeleteImages = async (imageIndexes) => {
+    if (!imageIndexes.length) return;
+    try {
+      setDeletingIndexes((prev) => new Set([...prev, ...imageIndexes]));
+      await deleteProductSampleImages(designer._id, imageIndexes);
+      message.success(`Removed ${imageIndexes.length} image(s)`);
+      if (onImageUploadSuccess) onImageUploadSuccess();
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting images:", error);
+      message.error(error.message || "Failed to delete images");
+    } finally {
+      setDeletingIndexes((prev) => {
+        const next = new Set(prev);
+        imageIndexes.forEach((i) => next.delete(i));
+        return next;
+      });
     }
   };
 
@@ -343,6 +366,15 @@ const DesignerDetailModal = ({
                           src={imageUrl} 
                           alt={`Product sample ${index + 1}`}
                         />
+                        <DeleteImageButton
+                          className="delete-image-btn"
+                          type="text"
+                          danger
+                          icon={<DeleteOutlined />}
+                          loading={deletingIndexes.has(index)}
+                          onClick={() => handleDeleteImages([index])}
+                          title="Remove this image"
+                        />
                       </ImagePreviewCard>
                     </Col>
                   ))}
@@ -538,6 +570,7 @@ const ExistingImagesSection = styled.div`
 `;
 
 const ImagePreviewCard = styled.div`
+  position: relative;
   background: #f8f9fa;
   padding: 8px;
   border-radius: 8px;
@@ -548,6 +581,28 @@ const ImagePreviewCard = styled.div`
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
+  }
+  
+  &:hover .delete-image-btn {
+    opacity: 1;
+  }
+`;
+
+const DeleteImageButton = styled(Button)`
+  position: absolute !important;
+  top: 12px;
+  right: 12px;
+  opacity: 0.85;
+  z-index: 1;
+  min-width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  
+  &.delete-image-btn:hover {
+    opacity: 1;
+    background: #fff !important;
   }
 `;
 

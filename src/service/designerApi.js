@@ -109,3 +109,18 @@ export const uploadProductSampleImages = async (designerId, imageUrls) => {
     throw error;
   }
 };
+
+// Delete product sample images by index
+export const deleteProductSampleImages = async (designerId, imageIndexes) => {
+  try {
+    return await apiCall(`/designer/${designerId}/product-sample-images`, {
+      method: "DELETE",
+      body: JSON.stringify({ imageIndexes }),
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw error;
+  }
+};
