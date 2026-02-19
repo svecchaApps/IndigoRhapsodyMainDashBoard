@@ -64,8 +64,9 @@ const CouponPageTable = () => {
   const fetchCoupons = async () => {
     try {
       setLoading(true);
-      const data = await GetCoupons();
-      const couponsData = data.coupons || [];
+      const response = await GetCoupons();
+      // API returns { message: "...", data: [...] }
+      const couponsData = response.data || [];
       setCoupons(couponsData);
       setFilteredCoupons(couponsData);
     } catch (error) {
