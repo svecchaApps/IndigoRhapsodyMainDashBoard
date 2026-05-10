@@ -13,6 +13,7 @@ import { TbCategoryPlus } from "react-icons/tb";
 import { LiaVideoSolid } from "react-icons/lia";
 import { PiSignOutLight } from "react-icons/pi";
 import { SiContentful } from "react-icons/si";
+import { MdOutlineTrendingUp } from "react-icons/md";
 import { BsCartCheck } from "react-icons/bs";
 import { logout } from "../../service/apiUtils";
 
@@ -173,6 +174,18 @@ function Sidebar() {
                   <SiContentful style={{ color: "black" }} />
                 </span>
                 <span className="menu-link-text">Content</span>
+              </NavLink>
+            </li>
+            <li className="menu-item">
+              <NavLink
+                to="/trend-watch"
+                activeClassName="active"
+                className="menu-link"
+              >
+                <span className="menu-link-icon">
+                  <MdOutlineTrendingUp style={{ color: "black" }} />
+                </span>
+                <span className="menu-link-text">Trend Watch</span>
               </NavLink>
             </li>
             <li className="menu-item">

@@ -27,6 +27,7 @@ import DesignerRequests from "./pages/designer-Requests/designerRequests";
 import BlogsPage from "./pages/blogs/blogsPage";
 import ManageQueries from "./pages/manageQueries/manageQueries";
 import OrdersPage from "./pages/orders/ordersPage";
+import TrendWatchPage from "./pages/trendWatch/trendWatchPage";
 
 function App() {
   // Initialize environment on app start
@@ -71,6 +72,7 @@ function App() {
             <Route path="/banner" element={<BannerPage />} />
             <Route path="/blogs" element={<BlogsPage />} />
             <Route path="/designer-requests" element={<DesignerRequests />} />
+            <Route path="/trend-watch" element={<TrendWatchPage />} />
           </Route>
 
           {/* Fallback Route */}
